@@ -1,164 +1,32 @@
-import {Form,FormGroup,Label,Input,FormText,Button} from 'reactstrap'
+import { Route,Routes } from "react-router-dom";
+
+import Registration from "./components/userAuthorization/Registration";
+import Login from "./components/userAuthorization/Login";
+import Header from "./components/header-footer/Header";
+import Home from "./components/home/Home";
+
+import OfficeForm from "./components/proprietor/OfficeForm";
+import OfficeList from "./components/proprietor/OfficeList";
 
 
 function App() {
+
+  
   return (
     <div className='row'>
-      <div className='col-md-2'>
-
-      </div>
-      <div className='col-md-8'>
-        <Form>
-        <FormGroup>
-          <Label for="exampleEmail">
-            Email
-          </Label>
-          <Input
-            id="exampleEmail"
-            name="email"
-            placeholder="with a placeholder"
-            type="email"
-            
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="examplePassword">
-            Password
-          </Label>
-          <Input
-            id="examplePassword"
-            name="password"
-            placeholder="password placeholder"
-            type="password"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleSelect">
-            Select
-          </Label>
-          <Input
-            id="exampleSelect"
-            name="select"
-            type="select"
-          >
-            <option>
-              1
-            </option>
-            <option>
-              2
-            </option>
-            <option>
-              3
-            </option>
-            <option>
-              4
-            </option>
-            <option>
-              5
-            </option>
-          </Input>
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleSelectMulti">
-            Select Multiple
-          </Label>
-          <Input
-            id="exampleSelectMulti"
-            multiple
-            name="selectMulti"
-            type="select"
-          >
-            <option>
-              1
-            </option>
-            <option>
-              2
-            </option>
-            <option>
-              3
-            </option>
-            <option>
-              4
-            </option>
-            <option>
-              5
-            </option>
-          </Input>
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleText">
-            Text Area
-          </Label>
-          <Input
-            id="exampleText"
-            name="text"
-            type="textarea"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleFile">
-            File
-          </Label>
-          <Input
-            id="exampleFile"
-            name="file"
-            type="file"
-          />
-          <FormText color='blue'>
-            This is some placeholder block-level help text for the above input. It‘s a bit lighter and easily wraps to a new line.
-          </FormText>
-        </FormGroup>
-        <FormGroup tag="fieldset">
-          <legend>
-            Radio Buttons
-          </legend>
-          <FormGroup check>
-            <Input
-              name="radio1"
-              type="radio"
-            />
-            {' '}
-            <Label check>
-              Option one is this and that—be sure to include why it‘s great
-            </Label>
-          </FormGroup>
-          <FormGroup check>
-            <Input
-              name="radio1"
-              type="radio"
-            />
-            {' '}
-            <Label check>
-              Option two can be something else and selecting it will deselect option one
-            </Label>
-          </FormGroup>
-          <FormGroup
-            check
-            disabled
-          >
-            <Input
-              disabled
-              name="radio1"
-              type="radio"
-            />
-            {' '}
-            <Label check>
-              Option three is disabled
-            </Label>
-          </FormGroup>
-        </FormGroup>
-        <FormGroup check>
-          <Input type="checkbox" />
-          {' '}
-          <Label check>
-            Check me out
-          </Label>
-        </FormGroup>
-        <Button>
-          Submit
-        </Button>
-      </Form>
-      </div>
+      
+      <Header/>
+     <Routes>
+        <Route path="/" element={<Home />} /> 
+        <Route path="/login" element={<Login />}/>
+        <Route path="/registration" element={<Registration />} />
+        <Route path="/office-form" element={<OfficeForm />} />
+        <Route path="/office-list" element={<OfficeList />} />
+       
+     </Routes>
+    
+    
+     
     </div>
   );
 }
