@@ -2,8 +2,11 @@
 
 import { useState } from "react"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 function Registration() {
+    const navigate=useNavigate()
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('') 
     const [username,setUsername] = useState('')
@@ -24,11 +27,13 @@ function Registration() {
         const response= await axios.post('http://localhost:3033/api/users/register',FormData)
         
           console.log(response)
+
             alert('successfully registered in')
             setServerErrors("")
           setEmail('')
           setPassword("")
           setUsername("")
+          navigate("/login")
           //  props.loginSuccess() //
         }catch(err){
             console.log(err)

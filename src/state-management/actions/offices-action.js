@@ -1,12 +1,18 @@
 import axios from 'axios'
-export const startGetOffices = () => { 
+export const startGetOffices = (city) => { 
+    console.log(city)
     return async (dispatch) => {
         try {
-            const response = await axios.get('http://localhost:3033/api/offices')
+            let response
+            if(city){
+                response = await axios.get(`http://localhost:3033/api/offices/search?city=${city}`)
+            }else{
+                 response = await axios.get('http://localhost:3033/api/offices')
+            }
             dispatch(setOffices(response.data))
-            console.log(response.data)
+            console.log("all offices",response.data)
         } catch(err) {
-            alert(err.message)
+            alert(err.response.data)
         }
     }
 }
@@ -17,19 +23,53 @@ const setOffices = (data) => {
     }
 }
 
+export const startGetMyOffices = (id) => { 
+    return async (dispatch) => {
+        try {
+            const response = await axios.get("http://localhost:3033/api/offices/my",{
+                headers:{
+                    Authorization:localStorage.getItem("token")
+                }
+            })
+
+            dispatch(setMyOffices(response.data))
+            console.log("my offices",response.data)
+        } catch(err) {
+            console.log(err)
+            alert(err.response.data)
+        }
+    }
+}
+
+const setMyOffices = (data) => {
+    return { 
+        type: 'SET_MY_OFFICES', payload: data 
+    }
+}
+
 export const startCreateOffice = (formData, resetForm) => {
     return async (dispatch) => {
         try {
             const response = await axios.post('http://localhost:3033/api/offices', formData,{
                  headers:{
-                    Authorization:localStorage.getItem('token')}
+                    Authorization:localStorage.getItem('token'),
+                    'Content-Type':"multipart/form-data"
+                }
                  })
             dispatch(addOffice(response.data))
             dispatch(setServerErrors([]))
             resetForm()
+            alert("successfully office has been submitted, wait for admin-approval")
         } catch(err) {
             console.log(err.response.data)
-            dispatch(setServerErrors(err.response.data))
+
+            if(err.response.data.errors){
+                dispatch(setServerErrors(err.response.data.errors))
+                alert("server error")
+            }else{
+                alert("error",err.response.data)
+            }
+            //dispatch(setServerErrors(err.response.data))
             //dispatch(setServerErrors(err.response.data.errors))
         }
     }
@@ -52,12 +92,25 @@ export const setServerErrors = (errors) => {
 export const startUpdateOffice = (id, formData, resetForm, toggle) => {
     return async (dispatch) => {
         try {
-            const response = await axios.put(`http://localhost:3050/api/offices/${id}`, formData) 
+            console.log("formData in office-actions/updateOffice",formData)
+            const response = await axios.put(`http://localhost:3033/api/offices/${id}`, formData,{
+                headers:{
+                   Authorization:localStorage.getItem('token'),
+                   'Content-Type':"multipart/form-data"
+               }
+             }) 
             dispatch(updateOffice(response.data)) 
+            dispatch(setServerErrors([]))
             resetForm()
             toggle()
+            alert("successfully updated")
         } catch(err) {
-            dispatch(setServerErrors(err.response.data.errors))
+            if(err.response.data.errors){
+                dispatch(setServerErrors(err.response.data.errors))
+                alert("validation error")
+            }else{
+                alert(err.response.data)
+            }
         }
     }
 }
@@ -69,13 +122,17 @@ const updateOffice = (office) => {
     }
 }
 
-export const startRemoveOffice = (id) => {
+export const startSoftRemoveOffice = (id) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`http://localhost:3050/api/offices/${id}`)
+            const response = await axios.delete(`http://localhost:3033/api/offices/${id}/owner`,{
+                headers:{
+                    Authorization:localStorage.getItem("token")
+                }
+            })
             dispatch(removeOffice(response.data))
         } catch(err) {
-
+            alert(err.response.data)
         }
     }
 }

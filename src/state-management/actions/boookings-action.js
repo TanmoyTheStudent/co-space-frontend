@@ -16,14 +16,23 @@ const setBookings = (data) => {
     }
 }
 
-export const startCreateBooking = (formData, resetForm) => {
+export const startCreateBooking = (formData,reDirect) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post('http://localhost:3033/api/bookings', formData)
+            
+            const response = await axios.post('http://localhost:3033/api/bookings', formData,{
+                headers:{
+                   Authorization:localStorage.getItem('token')
+               }
+            })
+
             dispatch(addBooking(response.data))
+            console.log(response.data)
+            reDirect(response.data)
             dispatch(setServerErrors([]))
-            resetForm()
+            //resetForm()
         } catch(err) {
+            console.log(err)
             dispatch(setServerErrors(err.response.data.errors))
         }
     }

@@ -1,47 +1,56 @@
 import { useState,useEffect } from 'react' 
 //import ProductForm from './ProductForm';
 import { useDispatch,useSelector } from 'react-redux'
-import { startGetOffices } from "../../state-management/actions/offices-action" 
+import { startGetMyOffices,startSoftRemoveOffice } from "../../state-management/actions/offices-action" 
+import { useParams,Link,useNavigate } from "react-router-dom"
 
 //import { setServerErrors, startRemoveProduct } from '../actions/products-action';
-//import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import OfficeForm from './OfficeForm'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-export default function OfficeList(props) {
+export default function MyOfficeList(props) {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     
-    //dispatch(startGetOffices())
+    //dispatch(startGetOffices()) --it will show error as it will keep fetching data
 
     useEffect(() => {
-        dispatch(startGetOffices())
+        dispatch(startGetMyOffices())
     
       }, [dispatch])
 
-    const data = useSelector((state) => {
+    const myOffices = useSelector((state) => {
         return state.offices.data
      })
-     console.log(data)
+     console.log("myOffices in officeList.js",myOffices)
 
 
-    // const [editId, setEditId] = useState('')
-    // const [modal, setModal] = useState(false);
-    // const {data} = props.products 
+    const [editId, setEditId] = useState('')
+    const [modal, setModal] = useState(false);
+    //const {data} = props.products 
 
-    // const toggle = () => {
-    //     setModal(!modal)
-    //     dispatch(setServerErrors([]))
-    // }
+    const toggle = () => {
+        setModal(!modal)
+        //dispatch(setServerErrors([]))
+    }
 
-    // const handleRemove = (id) => {
-    //     const userConfirm = window.confirm("Are you sure?")
-    //     if(userConfirm) {
-    //         dispatch(startRemoveProduct(id))
-    //     }
-    // }
+      const handleEdit = (id) => {
+        setEditId(id)
+        toggle()
+    }
 
-    // const handleEdit = (id) => {
-    //     setEditId(id)
-    //     toggle()
-    // }
+    const handleRemove = (id) => {
+        const userConfirm = window.confirm("Are you sure?")
+        if(userConfirm) {
+            dispatch(startSoftRemoveOffice(id))
+        }
+    }
+
+  
+
+     const handleShow=(id)=>{
+        navigate(`/my-office/${id}`)
+     }
 
     return (
         <div className="col-md-6 offset-md-3 " style={{marginTop: '100px'}}>
@@ -55,7 +64,7 @@ export default function OfficeList(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    { data.map((ele) => {
+                    { myOffices.map((ele) => {
                         return (
                             <tr key={ele._id}>
                                 <td>{ ele.title}</td>
@@ -63,9 +72,13 @@ export default function OfficeList(props) {
                                 <td>{ ele.capacity }</td>
                                 
                                 <td>
-                                        <button>show</button>
-                                        <button >edit</button>
-                                        <button >remove</button>
+                                        <button onClick={(e)=>{handleShow(ele._id)}}>show</button>
+                                        <button onClick={(() => {
+                                            handleEdit(ele._id)
+                                        })}>edit</button>
+                                        <button onClick={() => {
+                                            handleRemove(ele._id)
+                                        }}>remove</button>
 
                                    
                                         {/* <button onClick={(() => {
@@ -81,20 +94,17 @@ export default function OfficeList(props) {
                 </tbody>
             </table>
            
-      {/* <Modal isOpen={modal} toggle={toggle}>
+     <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}> Edit Product</ModalHeader>
         <ModalBody>
-            <ProductForm editId={editId} toggle={toggle} />
+            <OfficeForm myOffices={myOffices} editId={editId} toggle={toggle} />
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={toggle}>
-            Do Something
-          </Button>{' '}
           <Button color="secondary" onClick={toggle}>
             Cancel
           </Button>
         </ModalFooter>
-      </Modal> */}
+      </Modal> 
       
             </div>
     )
