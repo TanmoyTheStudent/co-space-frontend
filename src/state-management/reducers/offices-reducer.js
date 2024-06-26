@@ -1,11 +1,15 @@
 const initialState = {
     data: [],
-    serverErrors: []
+    serverErrors: [],
+    allOffices:[]
 }
 
 const officesReducer = (state = initialState, action) => {
     switch(action.type) {
         case 'SET_OFFICES' : {
+            return {...state, allOffices: action.payload}
+        }
+        case 'SET_MY_OFFICES' : {
             return {...state, data: action.payload}
         }
         case 'ADD_OFFICE' : {
